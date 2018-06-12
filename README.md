@@ -1,6 +1,6 @@
 Building just a module
 ======================
-sbt -ivy .ivy2 "runMain hardfloat.Chisel3Main f32FromRecF32 -td build"
+`sbt -ivy .ivy2 "runMain hardfloat.Chisel3Main f32FromRecF32 -td build"`
 
 
 Berkeley Hardware Floating-Point Units
