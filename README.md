@@ -1,3 +1,8 @@
+Building just a module
+======================
+sbt -ivy .ivy2 "runMain hardfloat.Chisel3Main f32FromRecF32 -td build"
+
+
 Berkeley Hardware Floating-Point Units
 ======================================
 
@@ -9,6 +14,7 @@ conversions between floating-point conversions with different precision.
 **WARNING**:
 These units are works in progress.  They may not be yet completely free of
 bugs, nor are they fully optimized.
+
 
 
 Recoded Format
