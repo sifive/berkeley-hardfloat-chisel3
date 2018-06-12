@@ -39,23 +39,68 @@ package hardfloat
 
 import Chisel._
 
-class ValExec_fNFromRecFN(expWidth: Int, sigWidth: Int) extends Module
+class
+    Equiv_INToFN(intWidth: Int, expWidth: Int, sigWidth: Int)
+    extends Module
 {
     val io = new Bundle {
-        val a = Bits(INPUT, expWidth + sigWidth)
+        val in = Bits(INPUT, intWidth)
+        val roundingMode   = UInt(INPUT, 3)
+        val detectTininess = UInt(INPUT, 1)
+        val signedIn = UInt(INPUT, 1)
+
         val out = Bits(OUTPUT, expWidth + sigWidth)
-        val check = Bool(OUTPUT)
-        val pass = Bool(OUTPUT)
+        val exceptionFlags = Bits(OUTPUT, 5)
     }
 
-    io.out :=
-        fNFromRecFN(expWidth, sigWidth, recFNFromFN(expWidth, sigWidth, io.a))
+    val iNToRecFN = Module(new INToRecFN(intWidth, expWidth, sigWidth))
+    iNToRecFN.io.signedIn := io.signedIn
+    iNToRecFN.io.in := io.in
+    iNToRecFN.io.roundingMode   := io.roundingMode
+    iNToRecFN.io.detectTininess := io.detectTininess
 
-    io.check := Bool(true)
-    io.pass := (io.out === io.a)
+    io.out := fNFromRecFN(expWidth, sigWidth, iNToRecFN.io.out)
+    io.exceptionFlags := iNToRecFN.io.exceptionFlags
 }
 
-class ValExec_f16FromRecF16 extends ValExec_fNFromRecFN(5, 11)
-class ValExec_f32FromRecF32 extends ValExec_fNFromRecFN(8, 24)
-class ValExec_f64FromRecF64 extends ValExec_fNFromRecFN(11, 53)
+class Equiv_I32ToF16 extends Equiv_INToFN(32, 5, 11)
+class Equiv_I32ToF32 extends Equiv_INToFN(32, 8, 24)
+class Equiv_I32ToF64 extends Equiv_INToFN(32, 11, 53)
+class Equiv_I64ToF16 extends Equiv_INToFN(64, 5, 11)
+class Equiv_I64ToF32 extends Equiv_INToFN(64, 8, 24)
+class Equiv_I64ToF64 extends Equiv_INToFN(64, 11, 53)
+
+
+class
+    Equiv_FNToIN(expWidth: Int, sigWidth: Int, intWidth: Int)
+    extends Module
+{
+    val io = new Bundle {
+        val in = Bits(INPUT, expWidth + sigWidth)
+        val roundingMode = UInt(INPUT, 3)
+        val signedOut = UInt(INPUT, 1)
+
+        val out = Bits(OUTPUT, intWidth)
+        val exceptionFlags = Bits(OUTPUT, 5)
+    }
+
+    val recFNToIN = Module(new RecFNToIN(expWidth, sigWidth, intWidth))
+    recFNToIN.io.in := recFNFromFN(expWidth, sigWidth, io.in)
+    recFNToIN.io.roundingMode := io.roundingMode
+    recFNToIN.io.signedOut := io.signedOut
+
+    io.out := recFNToIN.io.out
+    io.exceptionFlags :=
+        Cat(recFNToIN.io.intExceptionFlags(2, 1).orR,
+            UInt(0, 3),
+            recFNToIN.io.intExceptionFlags(0)
+        )
+}
+
+class Equiv_F16ToI32 extends Equiv_FNToIN(5, 11, 32)
+class Equiv_F16ToI64 extends Equiv_FNToIN(5, 11, 64)
+class Equiv_F32ToI32 extends Equiv_FNToIN(8, 24, 32)
+class Equiv_F32ToI64 extends Equiv_FNToIN(8, 24, 64)
+class Equiv_F64ToI32 extends Equiv_FNToIN(11, 53, 32)
+class Equiv_F64ToI64 extends Equiv_FNToIN(11, 53, 64)
 

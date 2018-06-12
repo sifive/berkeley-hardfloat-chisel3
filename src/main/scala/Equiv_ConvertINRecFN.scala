@@ -40,54 +40,65 @@ package hardfloat
 import Chisel._
 
 class
-    ValExec_RecFNToRecFN(
-        inExpWidth: Int, inSigWidth: Int, outExpWidth: Int, outSigWidth: Int)
+    Equiv_INToRecFN(intWidth: Int, expWidth: Int, sigWidth: Int)
     extends Module
 {
     val io = new Bundle {
-        val in = Bits(INPUT, inExpWidth + inSigWidth)
+        val in = Bits(INPUT, intWidth)
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
 
-        val expected = new Bundle {
-            val out = Bits(INPUT, outExpWidth + outSigWidth)
-            val exceptionFlags = Bits(INPUT, 5)
-            val recOut = Bits(OUTPUT, outExpWidth + outSigWidth + 1)
-        }
-
-        val actual = new Bundle {
-            val out = Bits(OUTPUT, outExpWidth + outSigWidth + 1)
-            val exceptionFlags = Bits(OUTPUT, 5)
-        }
-
-        val check = Bool(OUTPUT)
-        val pass = Bool(OUTPUT)
+        val out = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val exceptionFlags = Bits(OUTPUT, 5)
     }
 
-    val recFNToRecFN =
-        Module(
-            new RecFNToRecFN(inExpWidth, inSigWidth, outExpWidth, outSigWidth))
-    recFNToRecFN.io.in := recFNFromFN(inExpWidth, inSigWidth, io.in)
-    recFNToRecFN.io.roundingMode   := io.roundingMode
-    recFNToRecFN.io.detectTininess := io.detectTininess
+    val iNToRecFN = Module(new INToRecFN(intWidth, expWidth, sigWidth))
+    iNToRecFN.io.signedIn := Bool(true)
+    iNToRecFN.io.in := io.in
+    iNToRecFN.io.roundingMode   := io.roundingMode
+    iNToRecFN.io.detectTininess := io.detectTininess
 
-    io.expected.recOut :=
-        recFNFromFN(outExpWidth, outSigWidth, io.expected.out)
-
-    io.actual.out := recFNToRecFN.io.out
-    io.actual.exceptionFlags := recFNToRecFN.io.exceptionFlags
-
-    io.check := Bool(true)
-    io.pass :=
-        equivRecFN(
-            outExpWidth, outSigWidth, io.actual.out, io.expected.recOut) &&
-        (io.actual.exceptionFlags === io.expected.exceptionFlags)
+    io.out := iNToRecFN.io.out
+    io.exceptionFlags := iNToRecFN.io.exceptionFlags
 }
 
-class ValExec_RecF16ToRecF32 extends ValExec_RecFNToRecFN(5, 11, 8, 24)
-class ValExec_RecF16ToRecF64 extends ValExec_RecFNToRecFN(5, 11, 11, 53)
-class ValExec_RecF32ToRecF16 extends ValExec_RecFNToRecFN(8, 24, 5, 11)
-class ValExec_RecF32ToRecF64 extends ValExec_RecFNToRecFN(8, 24, 11, 53)
-class ValExec_RecF64ToRecF16 extends ValExec_RecFNToRecFN(11, 53, 5, 11)
-class ValExec_RecF64ToRecF32 extends ValExec_RecFNToRecFN(11, 53, 8, 24)
+class Equiv_I32ToRecF16 extends Equiv_INToRecFN(32, 5, 11)
+class Equiv_I32ToRecF32 extends Equiv_INToRecFN(32, 8, 24)
+class Equiv_I32ToRecF64 extends Equiv_INToRecFN(32, 11, 53)
+class Equiv_I64ToRecF16 extends Equiv_INToRecFN(64, 5, 11)
+class Equiv_I64ToRecF32 extends Equiv_INToRecFN(64, 8, 24)
+class Equiv_I64ToRecF64 extends Equiv_INToRecFN(64, 11, 53)
+
+
+class
+    Equiv_RecFNToIN(expWidth: Int, sigWidth: Int, intWidth: Int)
+    extends Module
+{
+    val io = new Bundle {
+        val in = Bits(INPUT, expWidth + sigWidth)
+        val roundingMode = UInt(INPUT, 3)
+
+        val out = Bits(OUTPUT, intWidth)
+        val exceptionFlags = Bits(OUTPUT, 5)
+    }
+
+    val recFNToIN = Module(new RecFNToIN(expWidth, sigWidth, intWidth))
+    recFNToIN.io.in := io.in
+    recFNToIN.io.roundingMode := io.roundingMode
+    recFNToIN.io.signedOut := Bool(true)
+
+    io.out := recFNToIN.io.out
+    io.exceptionFlags :=
+        Cat(recFNToIN.io.intExceptionFlags(2, 1).orR,
+            UInt(0, 3),
+            recFNToIN.io.intExceptionFlags(0)
+        )
+}
+
+class Equiv_RecF16ToI32 extends Equiv_RecFNToIN(5, 11, 32)
+class Equiv_RecF16ToI64 extends Equiv_RecFNToIN(5, 11, 64)
+class Equiv_RecF32ToI32 extends Equiv_RecFNToIN(8, 24, 32)
+class Equiv_RecF32ToI64 extends Equiv_RecFNToIN(8, 24, 64)
+class Equiv_RecF64ToI32 extends Equiv_RecFNToIN(11, 53, 32)
+class Equiv_RecF64ToI64 extends Equiv_RecFNToIN(11, 53, 64)
 
