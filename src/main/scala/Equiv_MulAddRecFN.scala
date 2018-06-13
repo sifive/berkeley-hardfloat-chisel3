@@ -39,17 +39,17 @@ package hardfloat
 
 import Chisel._
 
-class Equiv_MulAddFN(expWidth: Int, sigWidth: Int) extends Module
+class Equiv_MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
 {
     val io = new Bundle {
-        val a = Bits(INPUT, expWidth + sigWidth)
-        val b = Bits(INPUT, expWidth + sigWidth)
-        val c = Bits(INPUT, expWidth + sigWidth)
+        val a = Bits(INPUT, expWidth + sigWidth + 1)
+        val b = Bits(INPUT, expWidth + sigWidth + 1)
+        val c = Bits(INPUT, expWidth + sigWidth + 1)
         val op = Bits(INPUT, 3)
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
 
-        val out = Bits(OUTPUT, expWidth + sigWidth)
+        val out = Bits(OUTPUT, expWidth + sigWidth + 1)
         val exceptionFlags = Bits(OUTPUT, 5)
     }
 
@@ -61,10 +61,10 @@ class Equiv_MulAddFN(expWidth: Int, sigWidth: Int) extends Module
     mulAddRecFN.io.roundingMode   := io.roundingMode
     mulAddRecFN.io.detectTininess := io.detectTininess
 
-    io.out := fNFromRecFN(expWidth, sigWidth, mulAddRecFN.io.out)
+    io.out := mulAddRecFN.io.out
     io.exceptionFlags := mulAddRecFN.io.exceptionFlags
 }
 
-class Equiv_MulAddF16 extends Equiv_MulAddFN(5, 11)
-class Equiv_MulAddF32 extends Equiv_MulAddFN(8, 24)
-class Equiv_MulAddF64 extends Equiv_MulAddFN(11, 53)
+class Equiv_MulAddRecF16 extends Equiv_MulAddRecFN(5, 11)
+class Equiv_MulAddRecF32 extends Equiv_MulAddRecFN(8, 24)
+class Equiv_MulAddRecF64 extends Equiv_MulAddRecFN(11, 53)
