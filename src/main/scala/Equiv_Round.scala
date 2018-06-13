@@ -78,11 +78,11 @@ class
     extends Module
 {
     val io = new Bundle {
-        val in = UInt(INPUT, inExpWidth + inSigWidth)
+        val in = UInt(INPUT, inExpWidth + inSigWidth + 1)
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
 
-        val out = UInt(OUTPUT, outExpWidth + outSigWidth)
+        val out = UInt(OUTPUT, outExpWidth + outSigWidth + 1)
         val exceptionFlags = UInt(OUTPUT, 5)
         val isGoodIn = UInt(OUTPUT, 1)
         val isGoodOut = UInt(OUTPUT, 1)
