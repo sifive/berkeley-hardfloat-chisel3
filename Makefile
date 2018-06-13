@@ -4,7 +4,7 @@ default: build
 BASE_DIR = $(abspath .)
 BUILD_DIR ?= $(BASE_DIR)/build
 
-CONFIG ?= f32FromRecF32
+CONFIG ?= F32ToRecF32
 
 lookup_scala_srcs = $(shell find $(1)/ -iname "*.scala" 2> /dev/null)
 

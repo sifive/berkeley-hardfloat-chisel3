@@ -50,6 +50,7 @@ class
 
         val out = Bits(OUTPUT, expWidth + sigWidth + 1)
         val exceptionFlags = Bits(OUTPUT, 5)
+        val isGoodRecFN = Bits(OUTPUT, 1)
     }
 
     val iNToRecFN = Module(new INToRecFN(intWidth, expWidth, sigWidth))
@@ -60,6 +61,7 @@ class
 
     io.out := iNToRecFN.io.out
     io.exceptionFlags := iNToRecFN.io.exceptionFlags
+    io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.out)
 }
 
 class Equiv_I32ToRecF16 extends Equiv_INToRecFN(32, 5, 11)
@@ -75,11 +77,12 @@ class
     extends Module
 {
     val io = new Bundle {
-        val in = Bits(INPUT, expWidth + sigWidth)
+        val in = Bits(INPUT, expWidth + sigWidth + 1)
         val roundingMode = UInt(INPUT, 3)
 
         val out = Bits(OUTPUT, intWidth)
         val exceptionFlags = Bits(OUTPUT, 5)
+        val isGoodRecFN = Bits(OUTPUT, 1)
     }
 
     val recFNToIN = Module(new RecFNToIN(expWidth, sigWidth, intWidth))
@@ -93,6 +96,7 @@ class
             UInt(0, 3),
             recFNToIN.io.intExceptionFlags(0)
         )
+    io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.in)
 }
 
 class Equiv_RecF16ToI32 extends Equiv_RecFNToIN(5, 11, 32)

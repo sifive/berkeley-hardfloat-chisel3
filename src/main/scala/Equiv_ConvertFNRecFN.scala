@@ -60,9 +60,11 @@ class Equiv_FNToRecFN(expWidth: Int, sigWidth:Int) extends Module
     val io = new Bundle {
       val in = Bits(INPUT, expWidth + sigWidth)
       val out = Bits(OUTPUT, expWidth + sigWidth + 1)
+      val isGoodRecFN = Bits(OUTPUT, 1)
     }
 
     io.out := recFNFromFN(expWidth, sigWidth, io.in)
+    io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.out)
 }
 
 class Equiv_F16ToRecF16 extends Equiv_FNToRecFN(5, 11)

@@ -84,6 +84,8 @@ class
 
         val out = UInt(OUTPUT, outExpWidth + outSigWidth)
         val exceptionFlags = UInt(OUTPUT, 5)
+        val isGoodIn = UInt(OUTPUT, 1)
+        val isGoodOut = UInt(OUTPUT, 1)
     }
 
     val recFNToRecFN =
@@ -96,6 +98,8 @@ class
     io.out := recFNToRecFN.io.out
     io.exceptionFlags := recFNToRecFN.io.exceptionFlags
 
+    io.isGoodIn := isGoodRecFN(inExpWidth, inSigWidth, io.in)
+    io.isGoodOut := isGoodRecFN(outExpWidth, outSigWidth, io.out)
 }
 
 class Equiv_RecF16ToRecF32 extends Equiv_RecFNToRecFN(5, 11, 8, 24)
