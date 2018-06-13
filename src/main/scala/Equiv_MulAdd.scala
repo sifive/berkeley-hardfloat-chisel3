@@ -45,7 +45,7 @@ class Equiv_MulAddFN(expWidth: Int, sigWidth: Int) extends Module
         val a = Bits(INPUT, expWidth + sigWidth)
         val b = Bits(INPUT, expWidth + sigWidth)
         val c = Bits(INPUT, expWidth + sigWidth)
-        val op = Bits(INPUT, 3)
+        val op = Bits(INPUT, 2)
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
 
