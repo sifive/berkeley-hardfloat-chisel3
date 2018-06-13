@@ -81,3 +81,21 @@ object isSigNaNRawFloat
     def apply(in: RawFloat): Bool = in.isNaN && !in.sig(in.sigWidth - 2)
 }
 
+object isGoodRecFN 
+{
+    def apply(expWidth: Int, sigWidth: Int, in: Bits) = 
+    { 
+        val exp = in(expWidth + sigWidth - 1, sigWidth - 1)
+        val exp3 = exp(expWidth, expWidth - 2)
+        val sig = in(sigWidth - 2, 0)
+        val isZeroGood = (exp3 =/= UInt(0) || sig === UInt(0))
+        val emin = UInt(BigInt(1 << (expWidth - 1)) + 2)
+        val isBadExp = (exp3 =/= UInt(0)) && (exp < (emin - UInt(sigWidth - 1)))
+        val numZeros = exp - UInt(BigInt(1 << (expWidth - 1)) + 2)
+        val isSubnormal = exp < emin && exp >= emin - UInt(sigWidth - 1)
+        val isSubnormalGood = (isSubnormal && countLeadingZeros(Reverse(sig)) >= numZeros)
+        val isGoodNaN = (exp3 =/= UInt(7) || sig =/= UInt(0))
+
+        isGoodNaN && isZeroGood && isSubnormalGood && !isBadExp
+    }
+}

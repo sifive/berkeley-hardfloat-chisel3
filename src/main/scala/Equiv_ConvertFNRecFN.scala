@@ -44,21 +44,11 @@ class Equiv_RecFNToFN(expWidth: Int, sigWidth: Int) extends Module
     val io = new Bundle {
         val in = Bits(INPUT, expWidth + sigWidth + 1)
         val out = Bits(OUTPUT, expWidth + sigWidth)
-        val isZeroGood = Bits(OUTPUT, 1)
-        val isBadExp = Bits(OUTPUT, 1)
-        val isSubnormalGood = Bits(OUTPUT, 1)
+        val isGoodRecFN = Bits(OUTPUT, 1)
     }
 
     io.out := fNFromRecFN(expWidth, sigWidth, io.in)
-    val exp = io.in(expWidth + sigWidth - 1, sigWidth - 1)
-    val exp3 = exp(expWidth, expWidth - 2)
-    val sig = io.in(sigWidth - 2, 0)
-    io.isZeroGood := exp3 =/= UInt(0) || sig === UInt(0)
-    val emin = UInt(BigInt(1 << (expWidth - 1)) + 2)
-    io.isBadExp := (exp3 =/= UInt(0)) && (exp < (emin - UInt(sigWidth - 1)))
-    val numZeros = exp - UInt(BigInt(1 << (expWidth - 1)) + 2)
-    val isSubnormal = exp < emin && exp >= emin - UInt(sigWidth - 1)
-    io.isSubnormalGood := isSubnormal && countLeadingZeros(Reverse(sig)) >= numZeros
+    io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.in)
 }
 
 class Equiv_RecF16ToF16 extends Equiv_RecFNToFN(5, 11)
