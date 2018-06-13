@@ -81,11 +81,13 @@ class
         val in = UInt(INPUT, inExpWidth + inSigWidth + 1)
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
+        val kami_out = UInt(INPUT, outExpWidth + outSigWidth + 1)
 
         val out = UInt(OUTPUT, outExpWidth + outSigWidth + 1)
         val exceptionFlags = UInt(OUTPUT, 5)
         val isGoodIn = UInt(OUTPUT, 1)
         val isGoodOut = UInt(OUTPUT, 1)
+        val isEquiv = UInt(OUTPUT, 1)
     }
 
     val recFNToRecFN =
@@ -100,6 +102,7 @@ class
 
     io.isGoodIn := isGoodRecFN(inExpWidth, inSigWidth, io.in)
     io.isGoodOut := isGoodRecFN(outExpWidth, outSigWidth, io.out)
+    io.isEquiv := equivRecFN(outExpWidth, outSigWidth, io.out, io.kami_out)
 }
 
 class Equiv_RecF16ToRecF32 extends Equiv_RecFNToRecFN(5, 11, 8, 24)

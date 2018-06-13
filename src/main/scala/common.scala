@@ -100,3 +100,16 @@ object isGoodRecFN
 
     }
 }
+
+object equivRecFN
+{
+    def apply(expWidth: Int, sigWidth: Int, a: UInt, b: UInt) =
+    {
+        val top4A = a(expWidth + sigWidth, expWidth + sigWidth - 3)
+        val top4B = b(expWidth + sigWidth, expWidth + sigWidth - 3)
+        Mux((top4A(2, 0) === UInt(0)) || (top4A(2, 0) === UInt(7)),
+            (top4A === top4B) && (a(sigWidth - 2, 0) === b(sigWidth - 2, 0)),
+            Mux((top4A(2, 0) === UInt(6)), (top4A === top4B), (a === b))
+        )
+    }
+}
