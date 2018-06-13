@@ -91,9 +91,9 @@ object isGoodRecFN
         val isZeroGood = (exp3 =/= UInt(0) || sig === UInt(0))
         val emin = UInt(BigInt(1 << (expWidth - 1)) + 2)
         val isBadExp = (exp3 =/= UInt(0)) && (exp < (emin - UInt(sigWidth - 1)))
-        val numZeros = exp - UInt(BigInt(1 << (expWidth - 1)) + 2)
+        val numZeros = exp - emin
         val isSubnormal = exp < emin && exp >= emin - UInt(sigWidth - 1)
-        val isSubnormalGood = (isSubnormal && countLeadingZeros(Reverse(sig)) >= numZeros)
+        val isSubnormalGood = !isSubnormal || countLeadingZeros(Reverse(sig)) >= numZeros
         val isGoodNaN = (exp3 =/= UInt(7) || sig =/= UInt(0))
 
         isGoodNaN && isZeroGood && isSubnormalGood && !isBadExp
