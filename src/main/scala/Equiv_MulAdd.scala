@@ -55,9 +55,9 @@ class Equiv_MulAddFN(expWidth: Int, sigWidth: Int) extends Module
 
     val mulAddRecFN = Module(new MulAddRecFN(expWidth, sigWidth))
     mulAddRecFN.io.op := io.op
-    mulAddRecFN.io.a := io.a
-    mulAddRecFN.io.b := io.b
-    mulAddRecFN.io.c := io.c
+    mulAddRecFN.io.a := recFNFromFN(expWidth, sigWidth, io.a)
+    mulAddRecFN.io.b := recFNFromFN(expWidth, sigWidth, io.b)
+    mulAddRecFN.io.c := recFNFromFN(expWidth, sigWidth, io.c)
     mulAddRecFN.io.roundingMode   := io.roundingMode
     mulAddRecFN.io.detectTininess := io.detectTininess
 
