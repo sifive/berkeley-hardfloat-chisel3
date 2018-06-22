@@ -31,6 +31,7 @@ object Chisel3Main extends App {
     case "I32ToF32" => () => new Equiv_I32ToF32
     case "I32ToF64" => () => new Equiv_I32ToF64
     case "I64ToF64" => () => new Equiv_I64ToF64
+    case "I64ToF32" => () => new Equiv_I64ToF32
     case "RecF32ToI32" => () => new Equiv_RecF32ToI32
     case "RecF32ToI64" => () => new Equiv_RecF32ToI64
     case "RecF64ToI32" => () => new Equiv_RecF64ToI32
