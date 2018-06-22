@@ -50,7 +50,6 @@ class Equiv_MulAddFN(expWidth: Int, sigWidth: Int) extends Module
         val detectTininess = UInt(INPUT, 1)
 
         val out = Bits(OUTPUT, expWidth + sigWidth)
-        val mulOut = Bits(OUTPUT, 2*sigWidth + 2)
         val exceptionFlags = Bits(OUTPUT, 5)
     }
 
@@ -63,7 +62,6 @@ class Equiv_MulAddFN(expWidth: Int, sigWidth: Int) extends Module
     mulAddRecFN.io.detectTininess := io.detectTininess
 
     io.out := fNFromRecFN(expWidth, sigWidth, mulAddRecFN.io.out)
-    io.mulOut := mulAddRecFN.io.mulOut
     io.exceptionFlags := mulAddRecFN.io.exceptionFlags
 }
 
