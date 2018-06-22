@@ -309,6 +309,7 @@ class MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
         val out = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val mulOut = Bits(OUTPUT, 2*sigWidth + 2)
         val exceptionFlags = Bits(OUTPUT, 5)
     }
 
@@ -328,6 +329,9 @@ class MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
         (mulAddRecFNToRaw_preMul.io.mulAddA *
              mulAddRecFNToRaw_preMul.io.mulAddB) +&
             mulAddRecFNToRaw_preMul.io.mulAddC
+
+    io.mulOut := (mulAddRecFNToRaw_preMul.io.mulAddA *
+             mulAddRecFNToRaw_preMul.io.mulAddB)
 
     mulAddRecFNToRaw_postMul.io.fromPreMul :=
         mulAddRecFNToRaw_preMul.io.toPostMul
