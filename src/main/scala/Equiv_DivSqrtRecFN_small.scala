@@ -64,6 +64,7 @@ class
         }
 
         val out = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val valid = Bool(OUTPUT)
         val exceptionFlags = Bits(OUTPUT, 5)
     }
 
@@ -87,6 +88,7 @@ class
     io.output.detectTininess := cq.io.deq.bits.detectTininess
 
     io.out := fNFromRecFN(expWidth, sigWidth, ds.io.out)
+    io.valid := cq.io.deq.valid
     io.exceptionFlags := ds.io.exceptionFlags
 
     cq.io.deq.ready := ds.io.outValid_div
