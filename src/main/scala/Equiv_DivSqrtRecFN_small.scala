@@ -94,13 +94,13 @@ class
 }
 
 class
-    Equiv_DivSqrtRecF16_small_div
+    Equiv_DivF16
         extends Equiv_DivSqrtRecFN_small_div(5, 11)
 class
-    Equiv_DivSqrtRecF32_small_div
+    Equiv_DivF32
         extends Equiv_DivSqrtRecFN_small_div(8, 24)
 class
-    Equiv_DivSqrtRecF64_small_div
+    Equiv_DivF64
         extends Equiv_DivSqrtRecFN_small_div(11, 53)
 
 class SqrtRecFN_io(expWidth: Int, sigWidth: Int) extends Bundle {
