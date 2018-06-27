@@ -54,44 +54,28 @@ class
     Equiv_DivSqrtRecFN_small_div(expWidth: Int, sigWidth: Int) extends Module
 {
     val io = new Bundle {
-        val input = Decoupled(new DivRecFN_io(expWidth, sigWidth)).flip
+      val a = Bits(INPUT, expWidth + sigWidth)
+      val b = Bits(INPUT, expWidth + sigWidth)
+      val roundingMode   = UInt(INPUT, 3)
+      val detectTininess = UInt(INPUT, 1)
 
-        val output = new Bundle {
-            val a = Bits(OUTPUT, expWidth + sigWidth)
-            val b = Bits(OUTPUT, expWidth + sigWidth)
-            val roundingMode   = UInt(OUTPUT, 3)
-            val detectTininess = UInt(OUTPUT, 1)
-        }
-
-        val out = Bits(OUTPUT, expWidth + sigWidth + 1)
-        val valid = Bool(OUTPUT)
-        val exceptionFlags = Bits(OUTPUT, 5)
+      val out = Bits(OUTPUT, expWidth + sigWidth)
+      val ready = Bool(OUTPUT)
+      val exceptionFlags = Bits(OUTPUT, 5)
     }
 
-    val ds = Module(new DivSqrtRecFN_small(expWidth, sigWidth, 0))
-    val cq = Module(new Queue(new DivRecFN_io(expWidth, sigWidth), 5))
+    val divModule = Module(new DivSqrtRecFN_small(expWidth, sigWidth, 0))
 
-    cq.io.enq.valid := io.input.valid && ds.io.inReady
-    cq.io.enq.bits := io.input.bits
+    divModule.io.inValid := Bool(true)
+    divModule.io.sqrtOp := Bool(false)
+    divModule.io.a := recFNFromFN(expWidth, sigWidth, io.a)
+    divModule.io.b := recFNFromFN(expWidth, sigWidth, io.b)
+    divModule.io.roundingMode   := io.roundingMode
+    divModule.io.detectTininess := io.detectTininess
 
-    io.input.ready := ds.io.inReady && cq.io.enq.ready
-    ds.io.inValid := io.input.valid && cq.io.enq.ready
-    ds.io.sqrtOp := Bool(false)
-    ds.io.a := recFNFromFN(expWidth, sigWidth, io.input.bits.a)
-    ds.io.b := recFNFromFN(expWidth, sigWidth, io.input.bits.b)
-    ds.io.roundingMode   := io.input.bits.roundingMode
-    ds.io.detectTininess := io.input.bits.detectTininess
-
-    io.output.a := cq.io.deq.bits.a
-    io.output.b := cq.io.deq.bits.b
-    io.output.roundingMode   := cq.io.deq.bits.roundingMode
-    io.output.detectTininess := cq.io.deq.bits.detectTininess
-
-    io.out := fNFromRecFN(expWidth, sigWidth, ds.io.out)
-    io.valid := cq.io.deq.valid
-    io.exceptionFlags := ds.io.exceptionFlags
-
-    cq.io.deq.ready := ds.io.outValid_div
+    io.out := fNFromRecFN(expWidth, sigWidth, divModule.io.out)
+    io.ready := divModule.io.outValid_div
+    io.exceptionFlags := divModule.io.exceptionFlags
 
 }
 
