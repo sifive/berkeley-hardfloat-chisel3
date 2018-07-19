@@ -39,6 +39,8 @@ package hardfloat
 
 import Chisel._
 
+import chisel3.experimental.dontTouch
+
 class Equiv_MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
 {
     val io = new Bundle {
@@ -71,6 +73,10 @@ class Equiv_MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
     io.isGoodB := isGoodRecFN(expWidth, sigWidth, io.b)
     io.isGoodC := isGoodRecFN(expWidth, sigWidth, io.c)
     io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, mulAddRecFN.io.out)
+    dontTouch(io.isGoodA)
+    dontTouch(io.isGoodB)
+    dontTouch(io.isGoodC)
+    dontTouch(io.isGoodRecFN)
 }
 
 class Equiv_MulAddRecF16 extends Equiv_MulAddRecFN(5, 11)

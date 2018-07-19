@@ -313,6 +313,10 @@ class MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
         val out = Bits(OUTPUT, expWidth + sigWidth + 1)
         val exceptionFlags = Bits(OUTPUT, 5)
         val mulOut = Bits(OUTPUT, 2*sigWidth + 2)
+        val mulIn1 = Bits(OUTPUT, 2*sigWidth + 2)
+        val mulIn2 = Bits(OUTPUT, 2*sigWidth + 2)
+        val correctMulOut = Bool(OUTPUT)
+        val correctMulIn = Bool(OUTPUT)
         val sigSum_Msb = Bits(OUTPUT, 1)
     }
 
@@ -331,12 +335,27 @@ class MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
     io.mulOut := (mulAddRecFNToRaw_preMul.io.mulAddA *
              mulAddRecFNToRaw_preMul.io.mulAddB)
 
+    io.mulIn1 := mulAddRecFNToRaw_preMul.io.mulAddA
+    io.mulIn2 := mulAddRecFNToRaw_preMul.io.mulAddB
+
+    io.correctMulOut :=
+      io.mulOut <= UInt((BigInt(1)<<(2*sigWidth)) - (BigInt(1)<<(sigWidth+1)) + 1) &&
+      io.mulOut >= UInt(BigInt(1)<<(2*(sigWidth-1)))
+
+    io.correctMulIn :=
+      io.mulIn1(sigWidth-1) === UInt(1) && io.mulIn2(sigWidth-1) === UInt(1)
+
     val mulAddResult =
         (io.mulOut) +&
             mulAddRecFNToRaw_preMul.io.mulAddC
 
     io.sigSum_Msb := mulAddResult(sigWidth*2)
     dontTouch(io.sigSum_Msb)
+    dontTouch(io.correctMulOut)
+    dontTouch(io.correctMulIn)
+    dontTouch(io.mulOut)
+    dontTouch(io.mulIn1)
+    dontTouch(io.mulIn2)
 
     mulAddRecFNToRaw_postMul.io.fromPreMul :=
         mulAddRecFNToRaw_preMul.io.toPostMul

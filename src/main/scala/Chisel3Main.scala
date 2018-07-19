@@ -46,6 +46,9 @@ object Chisel3Main extends App {
     case "CompareF16" => () => new Equiv_CompareF16
     case "CompareF32" => () => new Equiv_CompareF32
     case "CompareF64" => () => new Equiv_CompareF64
+    case "CompareRecF16" => () => new Equiv_CompareRecF16
+    case "CompareRecF32" => () => new Equiv_CompareRecF32
+    case "CompareRecF64" => () => new Equiv_CompareRecF64
     case "DivF16" => () => new Equiv_DivF16
     case "DivF32" => () => new Equiv_DivF32
     case "DivF64" => () => new Equiv_DivF64
