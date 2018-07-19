@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package hardfloat
 
 import Chisel._
+import chisel3.experimental.dontTouch
 
 class
     Equiv_INToRecFN(intWidth: Int, expWidth: Int, sigWidth: Int)
@@ -47,6 +48,7 @@ class
         val in = Bits(INPUT, intWidth)
         val roundingMode   = UInt(INPUT, 3)
         val detectTininess = UInt(INPUT, 1)
+        val signedIn = UInt(INPUT, 1)
 
         val out = Bits(OUTPUT, expWidth + sigWidth + 1)
         val exceptionFlags = Bits(OUTPUT, 5)
@@ -54,7 +56,7 @@ class
     }
 
     val iNToRecFN = Module(new INToRecFN(intWidth, expWidth, sigWidth))
-    iNToRecFN.io.signedIn := Bool(true)
+    iNToRecFN.io.signedIn := io.signedIn
     iNToRecFN.io.in := io.in
     iNToRecFN.io.roundingMode   := io.roundingMode
     iNToRecFN.io.detectTininess := io.detectTininess
@@ -62,6 +64,7 @@ class
     io.out := iNToRecFN.io.out
     io.exceptionFlags := iNToRecFN.io.exceptionFlags
     io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.out)
+    dontTouch(io.isGoodRecFN)
 }
 
 class Equiv_I32ToRecF16 extends Equiv_INToRecFN(32, 5, 11)
@@ -79,6 +82,7 @@ class
     val io = new Bundle {
         val in = Bits(INPUT, expWidth + sigWidth + 1)
         val roundingMode = UInt(INPUT, 3)
+        val signedOut = UInt(INPUT, 1)
 
         val out = Bits(OUTPUT, intWidth)
         val exceptionFlags = Bits(OUTPUT, 5)
@@ -88,7 +92,7 @@ class
     val recFNToIN = Module(new RecFNToIN(expWidth, sigWidth, intWidth))
     recFNToIN.io.in := io.in
     recFNToIN.io.roundingMode := io.roundingMode
-    recFNToIN.io.signedOut := Bool(true)
+    recFNToIN.io.signedOut := io.signedOut
 
     io.out := recFNToIN.io.out
     io.exceptionFlags :=
@@ -97,6 +101,7 @@ class
             recFNToIN.io.intExceptionFlags(0)
         )
     io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.in)
+    dontTouch(io.isGoodRecFN)
 }
 
 class Equiv_RecF16ToI32 extends Equiv_RecFNToIN(5, 11, 32)
