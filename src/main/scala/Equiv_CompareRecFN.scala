@@ -69,7 +69,7 @@ class Equiv_CompareRecFN(expWidth: Int, sigWidth: Int) extends Module
     dontTouch(io.bGood)
 }
 
-class Equiv_CompareRecF16 extends Equiv_CompareRecFN(5, 11)
+class Equiv_CompareRecF16 extends Equiv_CompareRecFN(8, 8)
 class Equiv_CompareRecF32 extends Equiv_CompareRecFN(8, 24)
 class Equiv_CompareRecF64 extends Equiv_CompareRecFN(11, 53)
 

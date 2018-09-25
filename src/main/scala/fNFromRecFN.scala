@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package hardfloat
 
 import Chisel._
+import chisel3.experimental.dontTouch
 
 object fNFromRecFN
 {
@@ -62,6 +63,7 @@ object fNFromRecFN
                 denormFract,
                 Mux(rawIn.isInf, UInt(0), rawIn.sig(sigWidth - 2, 0))
             )
+	dontTouch(fractOut)
         Cat(rawIn.sign, expOut, fractOut)
     }
 }

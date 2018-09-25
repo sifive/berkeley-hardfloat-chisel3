@@ -55,7 +55,7 @@ class Equiv_MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
         val isGoodC = Bits(OUTPUT, 1)
         val isGoodRecFN = Bits(OUTPUT, 1)
 
-        val out = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val out = Bits(OUTPUT, expWidth + sigWidth)
         val exceptionFlags = Bits(OUTPUT, 5)
     }
 
@@ -67,7 +67,7 @@ class Equiv_MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
     mulAddRecFN.io.roundingMode   := io.roundingMode
     mulAddRecFN.io.detectTininess := io.detectTininess
 
-    io.out := mulAddRecFN.io.out
+    io.out := fNFromRecFN(expWidth, sigWidth, mulAddRecFN.io.out)
     io.exceptionFlags := mulAddRecFN.io.exceptionFlags
     io.isGoodA := isGoodRecFN(expWidth, sigWidth, io.a)
     io.isGoodB := isGoodRecFN(expWidth, sigWidth, io.b)

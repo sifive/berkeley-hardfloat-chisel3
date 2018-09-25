@@ -50,7 +50,7 @@ class
         val detectTininess = UInt(INPUT, 1)
         val signedIn = UInt(INPUT, 1)
 
-        val out = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val out = Bits(OUTPUT, expWidth + sigWidth)
         val exceptionFlags = Bits(OUTPUT, 5)
         val isGoodRecFN = Bits(OUTPUT, 1)
     }
@@ -61,16 +61,16 @@ class
     iNToRecFN.io.roundingMode   := io.roundingMode
     iNToRecFN.io.detectTininess := io.detectTininess
 
-    io.out := iNToRecFN.io.out
+    io.out := fNFromRecFN(expWidth, sigWidth, iNToRecFN.io.out)
     io.exceptionFlags := iNToRecFN.io.exceptionFlags
     io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.out)
     dontTouch(io.isGoodRecFN)
 }
 
-class Equiv_I32ToRecF16 extends Equiv_INToRecFN(32, 5, 11)
+class Equiv_I32ToRecF16 extends Equiv_INToRecFN(32, 8, 8)
 class Equiv_I32ToRecF32 extends Equiv_INToRecFN(32, 8, 24)
 class Equiv_I32ToRecF64 extends Equiv_INToRecFN(32, 11, 53)
-class Equiv_I64ToRecF16 extends Equiv_INToRecFN(64, 5, 11)
+class Equiv_I64ToRecF16 extends Equiv_INToRecFN(64, 8, 8)
 class Equiv_I64ToRecF32 extends Equiv_INToRecFN(64, 8, 24)
 class Equiv_I64ToRecF64 extends Equiv_INToRecFN(64, 11, 53)
 
@@ -104,8 +104,8 @@ class
     dontTouch(io.isGoodRecFN)
 }
 
-class Equiv_RecF16ToI32 extends Equiv_RecFNToIN(5, 11, 32)
-class Equiv_RecF16ToI64 extends Equiv_RecFNToIN(5, 11, 64)
+class Equiv_RecF16ToI32 extends Equiv_RecFNToIN(8, 8, 32)
+class Equiv_RecF16ToI64 extends Equiv_RecFNToIN(8, 8, 64)
 class Equiv_RecF32ToI32 extends Equiv_RecFNToIN(8, 24, 32)
 class Equiv_RecF32ToI64 extends Equiv_RecFNToIN(8, 24, 64)
 class Equiv_RecF64ToI32 extends Equiv_RecFNToIN(11, 53, 32)
