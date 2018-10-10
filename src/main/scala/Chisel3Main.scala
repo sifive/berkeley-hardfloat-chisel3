@@ -69,6 +69,7 @@ object Chisel3Main extends App {
     case "DivF16" => () => new Equiv_DivF16
     case "DivF32" => () => new Equiv_DivF32
     case "DivF64" => () => new Equiv_DivF64
+    case "TestSqrt" => () => new TestSqrt
     case c =>
       val msg = s"Config $c not found!\n  $useString"
       throw new java.lang.IllegalArgumentException(msg)
