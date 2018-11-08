@@ -46,7 +46,6 @@ class TestSqrt extends Module
 
   val io = new Bundle {
     val inp = UInt(INPUT, sigWidth + expWidth)
-    val outRaw = new RawFloat(expWidth, sigWidth + 2).asOutput
     val outRec = UInt(OUTPUT, sigWidth + expWidth + 1)
     val out = UInt(OUTPUT, sigWidth + expWidth)
   }
@@ -59,7 +58,6 @@ class TestSqrt extends Module
   sq.io.detectTininess := UInt(0)
   
 
-  io.outRaw := sq.io.outRaw
   io.outRec := sq.io.out
   io.out := fNFromRecFN(expWidth, sigWidth, io.outRec)
 
