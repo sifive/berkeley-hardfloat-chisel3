@@ -111,9 +111,10 @@ width of a is changed to (s+1)
 
 (xi + ci*2^(-i))^2 <= a
 xi^2 + ci*2^(-i)*(2xi+ci*2^(-i)) <= a
-x1 = 1
-ri = a - xi^2
+
+x0 = 0
 x(i+1) = xi + ci*2^(-i)
+ri = a - xi^2
 r(i+1) = a - x(i+1)^2
        = a - (xi^2 + ci*2^(-i)*(2xi+ci*2^(-i)))
        = ri - ci*2^(-i)*(2xi+ci*2^(-i))
@@ -121,7 +122,9 @@ r(i+1) = a - x(i+1)^2
 ci = ri >= 2^(-i)*(2xi + 2^(-i))
 summary_i = ri != 0
 
-i = 1 to s+1
+i = 0 to s+1
+
+For odd expression, do 2 steps initially.
 
 (s+1)th bit plus summary_(i+1) gives enough information for rounding.
 
@@ -132,11 +135,12 @@ rem_i = ri*2^(i-1)
 cycle_i = s+2-i
 bit_i = 2^(-i) (= 2^(s-i) = 2^(cycle_i-2) in terms of bit representation)
 
-sig_1 = 1 (= 2^s in terms of bit representation)
-rem_1 = a - 1 (= a - 2^s in terms of bit representation)
-cycle_1 = s+1
-bit_1 = 2^(-1) (= 2^(s-1) in terms of bit representation)
+sig_0 = 0
+rem_0 = a
+cycle_0 = s+2
+bit_0 = 1 (= 2^s in terms of bit representation)
 
+Proof:
 ci = 2*sig_i + bit_i <= 2*rem_i
 ci = 2xi + 2^(-i) <= ri*2^i. Qed
 
@@ -147,10 +151,7 @@ rem(i+1) = 2rem_i - ci*(2sig_i + bit_i)
 r(i+1)*2^i = ri*2^i - ci*(2xi + 2^(-i))
 r(i+1) = ri - ci*2^(-i)*(2xi + 2^(-1)). Qed
 
-For odd expression, do 2 steps initially.
-
-summary_1 = a <> 1 (= a <> 2^s in terms of bit representation)
-summary(i+1) = if ci then 2rem_i-(2sig_i+bit_i) <> 0 else summary_i, i <> 0
+Same argument as before for summary.
 
 
 ------------------------------
