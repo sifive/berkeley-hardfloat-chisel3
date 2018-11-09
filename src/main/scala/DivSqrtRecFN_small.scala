@@ -39,10 +39,70 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /*
 
-Square root:
-
 s = sigWidth
 c_i = newBit
+
+Division:
+
+Normal
+------
+
+(qi + ci * 2^(-1))*2b <= 2a
+q0 = 0
+r0 = 2a
+
+q(i+1) = qi + ci*2^(-i)
+ri = 2a - qi*2b
+r(i+1) = 2a - q(i+1)*2b
+       = 2a - qi*2b - ci*2^(-i)*2b
+r(i+1) = ri - ci*2^(-i)*2b
+ci = ri >= 2^(-i)*2b
+summary_i = ri != 0
+
+i = 0 to s+1
+
+(s+1)th bit plus summary_(i+1) gives enough information for rounding
+If (a < b), then we need to calculate (s+2)th bit and summary_(i+1)
+because we need s bits ignoring the leading zero. (This is skipCycle2
+part of Hauser's code.)
+
+Hauser:
+sig_i = qi*2^(s+1)
+rem_i = 2^(i-1)*ri
+cycle_i = s+3-i
+
+sig_0 = 0
+rem_0 = a
+
+sig(i+1) = sig(i) + ci*bit_i
+rem(i+1) = 2rem_i - ci*2b
+ci = 2rem_i >= 2b
+bit_i = 2^(cycle_i-2)
+summary_1 = 2a <> 2b
+summary(i+1) = if ci then 2rem_i-2b <> 0 else summary_i, i <> 0
+cycle(i+1) = cycle_i-1
+
+Proof:
+q(i+1)*2^(s+1) = q_i*2^(s+1) - ci*2^(cycle_i-2)
+               = q_i*2^(s+1) - ci*2^(s+3-i-2)
+               = q_i*2^(s+1) - ci*2^(s+1-i). Qed
+
+2^i*r(i+1) = 2^i*ri - ci*2b. Qed
+
+ci = 2^i*ri >= 2b. Qed
+
+summary(i+1) = if ci then rem(i+1) else summary_i, i <> 0
+Now, note that all of ck's cannot be 0, since that means
+a is 0. So when you traverse through a chain of 0 ck's,
+eventually, you reach a non-zero cj. That is exactly the
+value of ri as the reminder remains the same. When all ck's
+are 0 except c0, then summary_1 is set correctly according
+to r1 = 2a-2b != 0. So summary(i+1) is always set correctly
+according to r(i+1)
+
+
+
+Square root:
 
 
 Normal
