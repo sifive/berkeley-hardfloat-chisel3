@@ -140,6 +140,10 @@ rem_0 = a
 cycle_0 = s+2
 bit_0 = 1 (= 2^s in terms of bit representation)
 
+ci = 2*sig_i + bit_i <= 2*rem_i
+sig(i+1) = sig_i + ci * bit_i
+rem(i+1) = 2rem_i - ci*(2sig_i + bit_i)
+
 Proof:
 ci = 2*sig_i + bit_i <= 2*rem_i
 ci = 2xi + 2^(-i) <= ri*2^i. Qed
