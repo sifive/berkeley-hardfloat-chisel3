@@ -43,6 +43,7 @@ s = sigWidth
 c_i = newBit
 
 Division:
+width of a is s
 
 Normal
 ------
@@ -74,14 +75,16 @@ cycle_i = s+3-i
 
 sig_0 = 0
 rem_0 = a
+cycle_0 = s+3
+bit_0 = 2^(s+1)
 
 sig(i+1) = sig(i) + ci*bit_i
 rem(i+1) = 2rem_i - ci*2b
 ci = 2rem_i >= 2b
 bit_i = 2^(cycle_i-2)
+cycle(i+1) = cycle_i-1
 summary_1 = 2a <> 2b
 summary(i+1) = if ci then 2rem_i-2b <> 0 else summary_i, i <> 0
-cycle(i+1) = cycle_i-1
 
 Proof:
 q(i+1)*2^(s+1) = q_i*2^(s+1) - ci*2^(cycle_i-2)
@@ -104,11 +107,10 @@ according to r(i+1)
 
 
 Square root:
+width of a is (s+1)
 
 Normal
 ------
-width of a is changed to (s+1)
-
 (xi + ci*2^(-i))^2 <= a
 xi^2 + ci*2^(-i)*(2xi+ci*2^(-i)) <= a
 
@@ -122,6 +124,7 @@ r(i+1) = a - x(i+1)^2
 ci = ri >= 2^(-i)*(2xi + 2^(-i))
 summary_i = ri != 0
 
+
 i = 0 to s+1
 
 For odd expression, do 2 steps initially.
@@ -130,20 +133,25 @@ For odd expression, do 2 steps initially.
 
 Hauser
 ------
+
 sig_i = xi
 rem_i = ri*2^(i-1)
 cycle_i = s+2-i
 bit_i = 2^(-i) (= 2^(s-i) = 2^(cycle_i-2) in terms of bit representation)
 
 sig_0 = 0
-rem_0 = a
+rem_0 = a/2
 cycle_0 = s+2
 bit_0 = 1 (= 2^s in terms of bit representation)
 
-ci = 2*sig_i + bit_i <= 2*rem_i
 sig(i+1) = sig_i + ci * bit_i
 rem(i+1) = 2rem_i - ci*(2sig_i + bit_i)
+ci = 2*sig_i + bit_i <= 2*rem_i
 bit_i = 2^(cycle_i-2) (in terms of bit representation)
+cycle(i+1) = cycle_i-1
+summary_1 = a - (2^s) (in terms of bit representation) 
+summary(i+1) = if ci then rem(i+1) <> 0 else summary_i, i <> 0
+
 
 Proof:
 ci = 2*sig_i + bit_i <= 2*rem_i
