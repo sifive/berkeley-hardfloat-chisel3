@@ -51,6 +51,52 @@ class DivRecFN_io(expWidth: Int, sigWidth: Int) extends Bundle {
 }
 
 class
+    Equiv_DivSqrtRecFN_small(expWidth: Int, sigWidth: Int, options: Int)
+    extends Module
+{
+    val io = new Bundle {
+        /*--------------------------------------------------------------------
+        *--------------------------------------------------------------------*/
+        val inReady        = Bool(OUTPUT)
+        val inValid        = Bool(INPUT)
+        val sqrtOp         = Bool(INPUT)
+        val a              = Bits(INPUT, expWidth + sigWidth + 1)
+        val b              = Bits(INPUT, expWidth + sigWidth + 1)
+        val roundingMode   = UInt(INPUT, 3)
+        val detectTininess = UInt(INPUT, 1)
+        /*--------------------------------------------------------------------
+        *--------------------------------------------------------------------*/
+        val outValid_div   = Bool(OUTPUT)
+        val outValid_sqrt  = Bool(OUTPUT)
+        val out            = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val exceptionFlags = Bits(OUTPUT, 5)
+        val inAGood        = Bool(OUTPUT)
+        val inBGood        = Bool(OUTPUT)
+        val outGood        = Bool(OUTPUT)
+    }
+
+    val mo = Module(new DivSqrtRecFN_small(expWidth, sigWidth, options))
+    io.inReady := mo.io.inReady
+    mo.io.inValid := io.inValid
+    mo.io.sqrtOp := io.sqrtOp
+    mo.io.a := io.a
+    mo.io.b := io.b
+    mo.io.roundingMode := io.roundingMode
+    mo.io.detectTininess := io.detectTininess
+    io.outValid_div := mo.io.outValid_div
+    io.outValid_sqrt := mo.io.outValid_sqrt
+    io.out := mo.io.out
+    io.exceptionFlags := mo.io.exceptionFlags
+    io.inAGood := isGoodRecFN(expWidth, sigWidth, io.a)
+    io.inBGood := isGoodRecFN(expWidth, sigWidth, io.b)
+    io.outGood := isGoodRecFN(expWidth, sigWidth, io.out)
+}
+
+class Equiv_DivSqrtRecF16 extends Equiv_DivSqrtRecFN_small(5, 11, 0)
+class Equiv_DivSqrtRecF32 extends Equiv_DivSqrtRecFN_small(8, 24, 0)
+class Equiv_DivSqrtRecF64 extends Equiv_DivSqrtRecFN_small(11, 53, 0)
+
+class
     Equiv_DivSqrtRecFN_small_div(expWidth: Int, sigWidth: Int) extends Module
 {
     val io = new Bundle {
