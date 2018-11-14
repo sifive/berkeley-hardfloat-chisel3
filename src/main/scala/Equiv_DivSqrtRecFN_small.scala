@@ -69,6 +69,7 @@ class
         val outValid_div   = Bool(OUTPUT)
         val outValid_sqrt  = Bool(OUTPUT)
         val out            = Bits(OUTPUT, expWidth + sigWidth + 1)
+        val outFN          = Bits(OUTPUT, expWidth + sigWidth)
         val exceptionFlags = Bits(OUTPUT, 5)
         val inAGood        = Bool(OUTPUT)
         val inBGood        = Bool(OUTPUT)
@@ -90,6 +91,7 @@ class
     io.inAGood := isGoodRecFN(expWidth, sigWidth, io.a)
     io.inBGood := isGoodRecFN(expWidth, sigWidth, io.b)
     io.outGood := isGoodRecFN(expWidth, sigWidth, io.out)
+    io.outFN := fNFromRecFN(expWidth, sigWidth, io.out)
 }
 
 class Equiv_DivSqrtRecF16 extends Equiv_DivSqrtRecFN_small(5, 11, 0)
