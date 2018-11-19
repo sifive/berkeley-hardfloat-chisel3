@@ -162,7 +162,7 @@ x(i+1) = xi + ci*2^(-i). Qed
 
 rem(i+1) = 2rem_i - ci*(2sig_i + bit_i)
 r(i+1)*2^i = ri*2^i - ci*(2xi + 2^(-i))
-r(i+1) = ri - ci*2^(-i)*(2xi + 2^(-1)). Qed
+r(i+1) = ri - ci*2^(-i)*(2xi + 2^(-i)). Qed
 
 Same argument as before for summary.
 
