@@ -70,21 +70,21 @@ part of Hauser's code.)
 Hauser
 ------
 sig_i = qi
-rem_i = 2^(i-1)*ri
+rem_i = 2^(i-2)*ri
 cycle_i = s+3-i
 
 sig_0 = 0
-rem_0 = a/2
+rem_0 = a/4
 cycle_0 = s+3
 bit_0 = 2^0 (= 2^(s+1), since we represent a, b and q with (s+2) bits)
 
 sig(i+1) = sig(i) + ci*bit_i
-rem(i+1) = 2rem_i - ci*b
-ci = 2rem_i >= b
+rem(i+1) = 2rem_i - ci*b/2
+ci = 2rem_i >= b/2
 bit_i = 2^-i (=2^(cycle_i-2), since we represent a, b and q with (s+2) bits)
 cycle(i+1) = cycle_i-1
 summary_1 = a <> b
-summary(i+1) = if ci then 2rem_i-b <> 0 else summary_i, i <> 0
+summary(i+1) = if ci then 2rem_i-b/2 <> 0 else summary_i, i <> 0
 
 Proof:
 2^i*r(i+1) = 2^i*ri - ci*b. Qed
@@ -94,9 +94,11 @@ ci = 2^i*ri >= b. Qed
 summary(i+1) = if ci then rem(i+1) else summary_i, i <> 0
 Now, note that all of ck's cannot be 0, since that means
 a is 0. So when you traverse through a chain of 0 ck's,
+from the end,
 eventually, you reach a non-zero cj. That is exactly the
 value of ri as the reminder remains the same. When all ck's
-are 0 except c0, then summary_1 is set correctly according
+are 0 except c0 (which must be 1) then summary_1 is set
+correctly according
 to r1 = a-b != 0. So summary(i+1) is always set correctly
 according to r(i+1)
 
