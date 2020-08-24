@@ -39,7 +39,7 @@ package hardfloat
 
 import Chisel._
 
-import chisel3.experimental.dontTouch
+import chisel3.dontTouch
 
 class Equiv_MulAddRecFN(expWidth: Int, sigWidth: Int) extends Module
 {

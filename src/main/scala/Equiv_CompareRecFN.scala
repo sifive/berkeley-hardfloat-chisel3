@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package hardfloat
 
 import Chisel._
-import chisel3.experimental.dontTouch
+import chisel3.dontTouch
 
 class Equiv_CompareRecFN(expWidth: Int, sigWidth: Int) extends Module
 {

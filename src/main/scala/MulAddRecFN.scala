@@ -40,7 +40,7 @@ package hardfloat
 import Chisel._
 import consts._
 
-import chisel3.experimental.dontTouch
+import chisel3.dontTouch
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
