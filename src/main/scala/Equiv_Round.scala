@@ -65,11 +65,11 @@ class
 
 }
 
-class Equiv_F16ToF32 extends Equiv_FNToFN(8, 8, 8, 24)
-class Equiv_F16ToF64 extends Equiv_FNToFN(8, 8, 11, 53)
-class Equiv_F32ToF16 extends Equiv_FNToFN(8, 24, 8, 8)
+class Equiv_F16ToF32 extends Equiv_FNToFN(5, 11, 8, 24)
+class Equiv_F16ToF64 extends Equiv_FNToFN(5, 11, 11, 53)
+class Equiv_F32ToF16 extends Equiv_FNToFN(8, 24, 5, 11)
 class Equiv_F32ToF64 extends Equiv_FNToFN(8, 24, 11, 53)
-class Equiv_F64ToF16 extends Equiv_FNToFN(11, 53, 8, 8)
+class Equiv_F64ToF16 extends Equiv_FNToFN(11, 53, 5, 11)
 class Equiv_F64ToF32 extends Equiv_FNToFN(11, 53, 8, 24)
 
 class
@@ -105,11 +105,11 @@ class
     io.isEquiv := equivRecFN(outExpWidth, outSigWidth, io.out, io.kami_out)
 }
 
-class Equiv_RecF16ToRecF32 extends Equiv_RecFNToRecFN(8, 8, 8, 24)
-class Equiv_RecF16ToRecF64 extends Equiv_RecFNToRecFN(8, 8, 11, 53)
-class Equiv_RecF32ToRecF16 extends Equiv_RecFNToRecFN(8, 24, 8, 8)
+class Equiv_RecF16ToRecF32 extends Equiv_RecFNToRecFN(5, 11, 8, 24)
+class Equiv_RecF16ToRecF64 extends Equiv_RecFNToRecFN(5, 11, 11, 53)
+class Equiv_RecF32ToRecF16 extends Equiv_RecFNToRecFN(8, 24, 5, 11)
 class Equiv_RecF32ToRecF64 extends Equiv_RecFNToRecFN(8, 24, 11, 53)
-class Equiv_RecF64ToRecF16 extends Equiv_RecFNToRecFN(11, 53, 8, 8)
+class Equiv_RecF64ToRecF16 extends Equiv_RecFNToRecFN(11, 53, 5, 11)
 class Equiv_RecF64ToRecF32 extends Equiv_RecFNToRecFN(11, 53, 8, 24)
 
 //class Bug_F64ToF32() extends Module
