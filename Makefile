@@ -18,7 +18,10 @@ FIRRTL_COMMIT = 547082c04886f605b6f411b4ff3e42b54062f9a0
 FIRRTL_STAMP = $(BASE_DIR)/firrtl.stamp
 
 $(FIRRTL_DIR):
-	git clone $(FIRRTL_REPO) $@
+	git clone $(FIRRTL_REPO) $@ && \
+    cd $(FIRRTL_DIR) && \
+    git checkout $(FIRRTL_COMMIT) && \
+    cd -
 
 $(FIRRTL_STAMP): $(FIRRTL_DIR) $(call lookup_scala_srcs,$(FIRRTL_DIR))
 	cd $(FIRRTL_DIR) && $(SBT) publishLocal
@@ -31,7 +34,10 @@ CHISEL3_COMMIT = e03e3f730250673ffa48c000caa369ed582467a2
 CHISEL3_STAMP = $(BASE_DIR)/chisel3.stamp
 
 $(CHISEL3_DIR):
-	git clone $(CHISEL3_REPO) $@
+	git clone $(CHISEL3_REPO) $@ && \
+    cd $(CHISEL3_DIR) && \
+    git checkout $(CHISEL3_COMMIT) && \
+    cd -
 
 $(CHISEL3_STAMP): $(FIRRTL_STAMP) $(CHISEL3_DIR) $(call lookup_scala_srcs,$(CHISEL3_DIR))
 	cd $(CHISEL3_DIR) && $(SBT) publishLocal
