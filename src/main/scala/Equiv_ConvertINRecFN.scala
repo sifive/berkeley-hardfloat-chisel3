@@ -50,7 +50,7 @@ class
         val detectTininess = UInt(INPUT, 1)
         val signedIn = UInt(INPUT, 1)
 
-        val out = Bits(OUTPUT, expWidth + sigWidth)
+        val out = Bits(OUTPUT, expWidth + sigWidth + 1)
         val exceptionFlags = Bits(OUTPUT, 5)
         val isGoodRecFN = Bits(OUTPUT, 1)
     }
@@ -61,7 +61,7 @@ class
     iNToRecFN.io.roundingMode   := io.roundingMode
     iNToRecFN.io.detectTininess := io.detectTininess
 
-    io.out := fNFromRecFN(expWidth, sigWidth, iNToRecFN.io.out)
+    io.out := iNToRecFN.io.out
     io.exceptionFlags := iNToRecFN.io.exceptionFlags
     io.isGoodRecFN := isGoodRecFN(expWidth, sigWidth, io.out)
     dontTouch(io.isGoodRecFN)
