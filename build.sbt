@@ -1,6 +1,6 @@
 organization := "edu.berkeley.cs"
 
-version := "1.2"
+version := "1.3-SNAPSHOT"
 
 name := "hardfloat"
 
@@ -15,6 +15,4 @@ libraryDependencies ++= (Seq("chisel3").map {
   dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep))
 })
 
-
 //libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.2-SNAPSHOT"
-
