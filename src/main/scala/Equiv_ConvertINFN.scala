@@ -63,10 +63,10 @@ class
     io.exceptionFlags := iNToRecFN.io.exceptionFlags
 }
 
-class Equiv_I32ToF16 extends Equiv_INToFN(32, 8, 8)
+class Equiv_I32ToF16 extends Equiv_INToFN(32, 5, 11)
 class Equiv_I32ToF32 extends Equiv_INToFN(32, 8, 24)
 class Equiv_I32ToF64 extends Equiv_INToFN(32, 11, 53)
-class Equiv_I64ToF16 extends Equiv_INToFN(64, 8, 8)
+class Equiv_I64ToF16 extends Equiv_INToFN(64, 5, 11)
 class Equiv_I64ToF32 extends Equiv_INToFN(64, 8, 24)
 class Equiv_I64ToF64 extends Equiv_INToFN(64, 11, 53)
 
@@ -97,8 +97,8 @@ class
         )
 }
 
-class Equiv_F16ToI32 extends Equiv_FNToIN(8, 8, 32)
-class Equiv_F16ToI64 extends Equiv_FNToIN(8, 8, 64)
+class Equiv_F16ToI32 extends Equiv_FNToIN(5, 11, 32)
+class Equiv_F16ToI64 extends Equiv_FNToIN(5, 11, 64)
 class Equiv_F32ToI32 extends Equiv_FNToIN(8, 24, 32)
 class Equiv_F32ToI64 extends Equiv_FNToIN(8, 24, 64)
 class Equiv_F64ToI32 extends Equiv_FNToIN(11, 53, 32)

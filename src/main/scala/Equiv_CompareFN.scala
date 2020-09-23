@@ -61,7 +61,7 @@ class Equiv_CompareFN(expWidth: Int, sigWidth: Int) extends Module
     io.exceptionFlags := compareRecFN.io.exceptionFlags
 }
 
-class Equiv_CompareF16 extends Equiv_CompareFN(8, 8)
+class Equiv_CompareF16 extends Equiv_CompareFN(5, 11)
 class Equiv_CompareF32 extends Equiv_CompareFN(8, 24)
 class Equiv_CompareF64 extends Equiv_CompareFN(11, 53)
 
